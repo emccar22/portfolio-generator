@@ -1,6 +1,31 @@
 const inquirer = require('inquirer');
-// const fs = require('fs');
-// const generatePage = require('./src/page-template.js');
+const fs = require('fs');
+const generatePage = require('./src/page-template.js');
+
+const mockData = {
+    name: 'Eddie McCarthy',
+  github: 'emcarr22',
+  about: 'My name is Eddie McCarthy. I am new web developer looking toswitch careers',
+  projects: [
+    {
+      name: 'Run Buddy',
+      description: 'It is a page Built from HTML and CSS to help link people with trainers',
+      languages: ['Javascript'],
+      link: 'github.com/emccar22/run-buddy',
+      feature: true,
+      confirmAddProject: true
+    },
+    {
+      name: 'Wet Nose Adoption',
+      description: 'Wet nose adoption is a application to help people find dogs avaible for adoption in their area.',
+      languages: ['HTML'],
+      link: 'github.com/wet-nose-adoption',
+      feature: false,
+      confirmAddProject: false
+    }
+  ]
+}
+
 
 // const pageHTML = generatePage(name, github);
 
@@ -9,6 +34,7 @@ const inquirer = require('inquirer');
 
 //     console.log('Portfolio Complete! Checkout index.html to see the output!');
 // });
+
 const promptUser = () => {
     return inquirer.prompt([
         {
@@ -145,7 +171,13 @@ promptUser()
     // .then(answers => console.log(answers))
     .then(promptProject)
     .then(portfolioData => {
-        console.log(portfolioData);
+        const pageHTML = generatePage(portfolioData);
+
+    fs.writeFile('./index.html', pageHTML, err => {
+      if (err) throw new Error(err);
+
+      console.log('Page created! Check out index.html in this directory to see it!');
+    });
     });
 
 // const printProfileData = profileDataArr => {
