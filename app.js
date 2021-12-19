@@ -1,39 +1,6 @@
 const inquirer = require('inquirer');
-const fs = require('fs');
+const { writeFile, copyFile } = require('./utils/generate-site.js');
 const generatePage = require('./src/page-template.js');
-
-const mockData = {
-    name: 'Eddie McCarthy',
-  github: 'emcarr22',
-  about: 'My name is Eddie McCarthy. I am new web developer looking toswitch careers',
-  projects: [
-    {
-      name: 'Run Buddy',
-      description: 'It is a page Built from HTML and CSS to help link people with trainers',
-      languages: ['Javascript'],
-      link: 'github.com/emccar22/run-buddy',
-      feature: true,
-      confirmAddProject: true
-    },
-    {
-      name: 'Wet Nose Adoption',
-      description: 'Wet nose adoption is a application to help people find dogs avaible for adoption in their area.',
-      languages: ['HTML'],
-      link: 'github.com/wet-nose-adoption',
-      feature: false,
-      confirmAddProject: false
-    }
-  ]
-}
-
-
-// const pageHTML = generatePage(name, github);
-
-// fs.writeFile('./index.html', pageHTML, err => {
-//     if (err) throw new Error(err);
-
-//     console.log('Portfolio Complete! Checkout index.html to see the output!');
-// });
 
 const promptUser = () => {
     return inquirer.prompt([
@@ -168,21 +135,20 @@ const promptProject = portfolioData => {
 
 
 promptUser()
-    // .then(answers => console.log(answers))
     .then(promptProject)
     .then(portfolioData => {
-        const pageHTML = generatePage(portfolioData);
-
-    fs.writeFile('./index.html', pageHTML, err => {
-      if (err) throw new Error(err);
-
-      console.log('Page created! Check out index.html in this directory to see it!');
+         return generatePage(portfolioData);
+    })
+    .then(pageHTML => {
+        return writeFile(pageHTML);
+    })
+    .then(writeFileResponse => {
+        console.log(writeFileResponse);
+        return copyFile();
+    })
+    .then(copyFileResponse => {
+        console.log(copyFileResponse);
+    })
+    .catch(err => {
+        console.log(err);
     });
-    });
-
-// const printProfileData = profileDataArr => {
-
-//     profileDataArr.forEach(profileItem => console.log(profileItem));
-// };
-
-// printProfileData(profileDataArgs);
